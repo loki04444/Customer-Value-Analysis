@@ -2,8 +2,6 @@
 # coding: utf-8
 
 # In[1]:
-
-
 from scipy.stats import norm
 from scipy import stats
 from sklearn.preprocessing import StandardScaler
@@ -24,57 +22,37 @@ import datetime
 
 
 # In[2]:
-
-
 current_directory = os.getcwd()
 os.chdir('C:\\Users\\lokna\\OneDrive\\Desktop')
 
 
 # In[3]:
-
-
 df1 = pd.read_excel("Assignment-1_Data.xlsx")
 
-
 # In[4]:
-
-
 df1.describe
 
 
 # In[5]:
-
-
 df1
 
-
 # In[7]:
-
-
 seed_value = 44
 random.seed(seed_value)
-
 
 # # DATA CLEANING -
 
 # In[8]:
-
-
 Dataset1=df1
 
 
 # In[9]:
-
-
 print(Dataset1['Date'].dtype)
 
 date_format = 'your_actual_date_format_here'
 Dataset1['Date'] = pd.to_datetime(Dataset1['Date'], format=date_format)
 
-
 # In[10]:
-
-
 missing_values = Dataset1.isnull().sum()
 print("Missing values in each variable of Dataset1:")
 print(missing_values)
@@ -82,30 +60,16 @@ print(missing_values)
 
 # In[11]:
 
-
 Dataset1.dropna(inplace=True)
-
-
-# In[12]:
-
 
 duplicate_count = df1.duplicated().sum()
 print(f"Number of duplicate rows: {duplicate_count}")
-
-
-
-# In[13]:
-
 
 # Remove duplicate rows
 Dataset1.drop_duplicates(inplace=True)
 
 # Reset the index if needed
 Dataset1.reset_index(drop=True, inplace=True)
-
-
-# In[16]:
-
 
 # List of buzzwords to delete
 buzzwords = ["WRONG", "LOST", "CRUSHED", "SMASHED", "DAMAGED", "FOUND", "THROWN", "MISSING",
@@ -120,15 +84,7 @@ Dataset1 = Dataset1[~Dataset1['Itemname'].str.contains('|'.join(buzzwords), case
 # Reset the index if needed
 Dataset1.reset_index(drop=True, inplace=True)
 
-
-# In[17]:
-
-
 Dataset1
-
-
-# In[19]:
-
 
 # Create the new column "TotalPrice"
 Dataset1['TotalPrice'] = Dataset1['Quantity'] * Dataset1['Price']
@@ -139,17 +95,10 @@ Dataset1 = Dataset1[(Dataset1['Quantity'] > 0) & (Dataset1['Price'] > 0) & (Data
 # Display the updated DataFrame
 print(Dataset1)
 
-
 # In[20]:
-
-
 Dataset2 = Dataset1
 
-
-
 # In[22]:
-
-
 # Extract the Year and Month from the 'Date' column
 Dataset2['Year'] = Dataset2['Date'].dt.year
 Dataset2['Month'] = Dataset2['Date'].dt.month
@@ -159,8 +108,6 @@ print(Dataset2.head())
 
 
 # In[23]:
-
-
 # Convert 'Date' column to datetime format
 Dataset2['Date'] = pd.to_datetime(Dataset2['Date'])
 
@@ -170,15 +117,10 @@ Dataset2['Date1'] = Dataset2['Date'].dt.date
 # Print the updated DataFrame
 print(Dataset2)
 
-
-# In[ ]:
-
-
 #####################uk and seasons######################
 
 
 # In[24]:
-
 
 # Filter the DataFrame to include only rows where 'Country' is 'United Kingdom'
 Dataset2 = pd.DataFrame(Dataset2)
@@ -204,17 +146,10 @@ Dataset2.loc[:, 'Season'] = Dataset2['Date'].dt.month.map(get_season)
 # Print the updated DataFrame
 print(Dataset2)
 
-
-
-# In[25]:
-
-
 ####################################### DESCRIPTIVE ANALYSIS ##########################################################
 
 
 # In[27]:
-
-
 #################TO CHECK THE TOP TRANSCATIONS BY COUNTRY #######################3
 # Assuming Dataset2 is already loaded as a DataFrame
 country_counts = Dataset1['Country'].value_counts()
@@ -231,8 +166,6 @@ plt.show()
 
 
 # In[28]:
-
-
 # Group the data by year and calculate transaction counts for each year
 yearly_transaction_counts = Dataset1.groupby('Year')['BillNo'].count()
 
@@ -246,8 +179,6 @@ plt.show()
 
 
 # In[50]:
-
-
 # Create a line plot
 plt.figure(figsize=(12, 7))
 plt.plot(Sales_weekly.index, Sales_weekly.values, linewidth=2)
@@ -260,8 +191,6 @@ plt.show()
 
 
 # In[49]:
-
-
 # Create a line plot
 plt.figure(figsize=(12, 7))
 plt.plot(Unique_customer_weekly.index, Unique_customer_weekly.values, linewidth=2)
@@ -274,8 +203,6 @@ plt.show()
 
 
 # In[48]:
-
-
 # Calculate the sales per customer ratio
 Sales_per_Customer = Sales_weekly / Unique_customer_weekly
 
@@ -291,8 +218,6 @@ plt.show()
 
 
 # In[46]:
-
-
 # Group by Season and ItemName, then get the size/count of each group
 grouped_counts = Dataset2.groupby(['Season', 'Itemname']).size().reset_index(name='Count')
 
@@ -315,8 +240,6 @@ plt.show()
 
 
 # In[45]:
-
-
 # Group by month and count the items sold
 monthly_sales = Dataset1.groupby(pd.Grouper(key='Date', freq='M'))['Itemname'].count()
 
@@ -331,14 +254,10 @@ plt.show()
 
 
 # In[44]:
-
-
 Dataset3=Dataset2
 
 
 # In[51]:
-
-
 Dataset3
 season_spring = Dataset3[Dataset3['Season'] == 'Spring'] #68494 
 season_summer = Dataset3[Dataset3['Season'] == 'Summer'] #69002 
@@ -347,8 +266,6 @@ season_winter = Dataset3[Dataset3['Season'] == 'Winter'] #73577
 
 
 # In[52]:
-
-
 # Group by 'Itemname' and count the frequency of each item
 Frequency_of_items = Dataset3.groupby('Itemname').size().reset_index(name='count')
 
@@ -360,8 +277,6 @@ fig.show()
 
 
 # In[53]:
-
-
 # Group by 'Itemname' and count the frequency of each item
 Frequency_of_items = Dataset3.groupby('Itemname').size().reset_index(name='count')
 
@@ -377,7 +292,6 @@ fig.show()
 
 # In[54]:
 
-
 # Grouping data to create cleandata1
 cleandata1 = Dataset3.groupby(['CustomerID', 'Date']).BillNo.nunique().reset_index(name='count_order')
 
@@ -392,18 +306,13 @@ cleandata2 = cleandata1.groupby('CustomerID').agg(
 
 print(cleandata2)
 
-
 # In[55]:
-
-
 # Create snapshot date
 snapshot_date = cleandata2['last_order_date'].max() + datetime.timedelta(days=1)
 print(snapshot_date)
 
 
 # In[56]:
-
-
 # Create snapshot date
 snapshot_date = cleandata2['last_order_date'].max() + datetime.timedelta(days=1)
 
@@ -427,8 +336,6 @@ print(customers)
 
 
 # In[62]:
-
-
 #distrubution analysis for recency
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -444,8 +351,6 @@ plt.figure(figsize=(12,10))
 
 
 # In[63]:
-
-
 # Create a histogram with KDE plot
 plt.figure(figsize=(12, 6))
 sns.histplot(data=customers, x='Frequency', kde=True)
@@ -457,8 +362,6 @@ plt.show()
 
 
 # In[64]:
-
-
 #distrubution analysis for monetaryvalue
 fig, ax = plt.subplots()
 sns.histplot(data=customers, x='MonetaryValue', kde=True)
@@ -466,8 +369,6 @@ ax.set_title('Histogram and MonetaryValue')
 
 
 # In[65]:
-
-
 #Box-cox transformation
 customers_fix["Frequency"] = stats.boxcox(customers['Frequency'])[0]
 customers_fix["MonetaryValue"] = stats.boxcox(customers['MonetaryValue'])[0]
@@ -491,7 +392,6 @@ print(customers_normalized.std(axis = 0).round(2)) # [1. 1. 1.]
 
 
 # In[67]:
-
 
 # RFM segmentation
 cleandata2['rfm_recency'] = pd.qcut(cleandata2['last_order_date'], q=4, labels=False, duplicates='drop') + 1
@@ -531,10 +431,7 @@ rfm_segment['rfm_level'] = rfm_segment.apply(rfm_level, axis=1)
 rfm_agg = rfm_segment.groupby('rfm_level').agg({'CustomerID':'count'})
 print(rfm_agg)
 
-
 # In[68]:
-
-
 # Data
 data = {
     'Customers ': ['At Risk', 'Customers Needing Attention', 'Lost', 'Loyal', 'Potential Loyalist', 'Promising'],
@@ -555,9 +452,7 @@ plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 plt.title('Distribution of Customers across RFM Levels')
 plt.show()
 
-
 # In[69]:
-
 
 # Initialize an empty dictionary to store SSE values
 sse = {}
@@ -580,9 +475,7 @@ plt.plot(list(sse.keys()), list(sse.values()), marker='o')
 plt.grid(True)
 plt.show()
 
-
 # In[70]:
-
 
 # K-Means clustering with K=5 and random_state=0
 model = KMeans(n_clusters=5, random_state=0)
@@ -600,9 +493,7 @@ cluster_summary = customers.groupby('Cluster').agg({
 
 print(cluster_summary)
 
-
 # In[71]:
-
 
 # First normalize the data
 # Create the dataframe
@@ -620,16 +511,9 @@ df_nor_melt = pd.melt(df_normalized.reset_index(),
 # Visualize it
 sns.lineplot(x='Attribute', y='Value', hue='Cluster', data=df_nor_melt)
 
-
-# In[ ]:
-
-
 ################################################# Mba analysis ######################################
 
-
 # In[72]:
-
-
 # Assuming df1_selected22 is your DataFrame containing 'BillNo' and 'Itemname'
 df_fp = Dataset3[['BillNo', 'Itemname']]
 df_fp = df_fp.groupby('BillNo')['Itemname'].apply(list).to_list()
@@ -647,10 +531,7 @@ enctrans = transEncoder.transform(df_fp)
 df_fp_final = pd.DataFrame(enctrans, columns=transEncoder.columns_)
 df_fp_final.head()
 
-
 # In[75]:
-
-
 # List of frequency itemset
 frequent_itemsets = fpgrowth(df_fp_final, min_support=0.01, use_colnames=True)
 frequent_itemsets.head(10)
@@ -665,17 +546,11 @@ association_rules(frequent_itemsets,metric='lift',min_threshold=0.6)
 
 
 # In[78]:
-
-
 Dataset66=Dataset3 ####(converting main dataset to dataset 66)
 
 
 # In[79]:
-
-
-############################for main dataset ,,no of association rules + freuqent pattenr
-
-
+###for main dataset ,,no of association rules + freuqent pattenr
 # In[91]:
 
 
@@ -1005,670 +880,3 @@ plt.ylabel('Number of Association Rules')
 plt.legend()
 plt.grid(True)
 plt.show()
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
-
-# In[ ]:
-
-
-
-
